@@ -1,3 +1,3 @@
-pytube
+git+https://github.com/pytube/pytube
 pydub
 youtube-search-python

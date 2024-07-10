@@ -31,11 +31,26 @@ def main():
     url = searchResults[selection]["link"]
 
     yt = YouTube(url)
-    audioStream = yt.streams.filter(only_audio=True).first()
 
-    if audioStream is None:
-        print("No audio stream found")
+    streams = set()
+    for s in yt.streams:
+        if s.type == "audio":
+            streams.add(s)
+
+    if not streams:
+        print("No audio streams found")
         return
+
+    if len(streams) > 1:
+        streams = sorted(streams, key=lambda s: int(s.abr[:-4]), reverse=True)
+        for i, s in enumerate(streams):
+            print(f"{i + 1}. {s.audio_codec} {s.abr} {s.mime_type}")
+            print()
+
+        selection = int(input("Select an audio stream to download: ")) - 1
+        audioStream = list(streams)[selection]
+    else:
+        audioStream = list(streams)[0]
 
     audioBuffer = io.BytesIO()
     audioStream.stream_to_buffer(audioBuffer)
