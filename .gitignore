@@ -1,6 +1,7 @@
 *.mp3
 dist/
 .DS_Store
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
