@@ -14,7 +14,7 @@ class yt_audio:
     def search(self, query):
         """Search for YouTube videos and return results."""
         videos_search = Search(query)
-        return videos_search.results
+        return videos_search.results[:5]
 
     def _get_audio_streams(self):
         """Get available audio streams sorted by bitrate."""
@@ -59,8 +59,3 @@ class yt_audio:
     def get_safe_filename(self):
         """Get a filename-safe version of the video title."""
         return re.sub(r'[^\w\s-]', '', self.yt.title) + ".mp3"
-
-    def __del__(self):
-        """Clean up the httpx client when the object is destroyed."""
-        if hasattr(self, 'client'):
-            self.client.close()
