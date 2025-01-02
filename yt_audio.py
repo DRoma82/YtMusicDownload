@@ -18,6 +18,7 @@ class yt_audio:
             'format': 'm4a/bestaudio/best',
             "outtmpl": "-",
             'logtostderr': True,
+            'quiet': True,
             # ℹ️ See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
             'postprocessors': [{  # Extract audio using ffmpeg
                 'key': 'FFmpegExtractAudio',
