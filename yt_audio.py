@@ -37,7 +37,8 @@ class yt_audio:
         with YoutubeDL(info_opts) as ydl:
             info = ydl.extract_info(self.URL, download=False)
 
-        return buffer
+        filename = self.get_safe_filename(info['title'])
+        return filename, buffer
 
     def get_safe_filename(self, title: str):
         """Get a filename-safe version of the video title."""
