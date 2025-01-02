@@ -33,4 +33,4 @@ class yt_audio:
 
     def get_safe_filename(self, title: str):
         """Get a filename-safe version of the video title."""
-        return re.sub(r'[^\w\s-]', '', title) + ".mp3"
+        return re.sub(r'[^\w\s-]', '', title) + ".m4a"
