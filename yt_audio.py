@@ -1,6 +1,7 @@
 import io
 import re
-import yt_dlp
+from contextlib import redirect_stdout
+from yt_dlp import YoutubeDL
 
 
 class yt_audio:
@@ -15,6 +16,8 @@ class yt_audio:
 
         ydl_opts = {
             'format': 'm4a/bestaudio/best',
+            "outtmpl": "-",
+            'logtostderr': True,
             # ℹ️ See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
             'postprocessors': [{  # Extract audio using ffmpeg
                 'key': 'FFmpegExtractAudio',
@@ -22,8 +25,11 @@ class yt_audio:
             }]
         }
 
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        buffer = io.BytesIO()
+        with redirect_stdout(buffer), YoutubeDL(ydl_opts) as ydl:
             ydl.download(self.URLS)
+
+        return buffer
 
     def get_safe_filename(self, title: str):
         """Get a filename-safe version of the video title."""
