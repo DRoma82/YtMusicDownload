@@ -13,7 +13,7 @@ def download_audio(url):
 
         return send_file(
             audio_buffer,
-            mimetype="audio/mp3",
+            mimetype="audio/m4a",
             as_attachment=True,
             download_name=filename
         )
