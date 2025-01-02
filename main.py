@@ -1,33 +1,11 @@
-import argparse
 from yt_audio import yt_audio
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Download audio from YouTube video and convert to mp3")
-    parser.add_argument("-q", "--query", help="Search query")
-    args = parser.parse_args()
+    yt = yt_audio('https://www.youtube.com/watch?v=z3JhXn_onsw')
 
-    while not args.query:
-        args.query = input("Enter the search query: ")
-
-    yt = yt_audio()
-    searchResults = yt.search(args.query)
-
-    if not searchResults:
-        print("No search results found")
-        return
-
-    for i, result in enumerate(searchResults):
-        print(f"{i + 1}. {result.title}")
-
-    selection = int(input("Select a video to download: ")) - 1
-    yt.yt = searchResults[selection]
-    audio_buffer = yt.download_audio(target_bitrate=128)
-    filename = yt.get_safe_filename()
-
-    with open(filename, 'wb') as f:
-        f.write(audio_buffer.getvalue())
+    yt.download_audio()
+    filename = yt.get_safe_filename('test')
 
     print("Downloaded", filename)
 

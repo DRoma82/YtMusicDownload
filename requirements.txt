@@ -2,3 +2,4 @@ git+https://github.com/pytube/pytube
 pydub
 youtube-search-python
 flask
+yt_dlp
