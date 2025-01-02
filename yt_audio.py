@@ -2,19 +2,19 @@ import io
 import re
 from contextlib import redirect_stdout
 from yt_dlp import YoutubeDL
+import json
 
 
 class yt_audio:
-    def __init__(self, url: str = None):
-        if url:
-            self.URLS = [url]
+    def __init__(self, url: str):
+        self.URL = url
 
     def download_audio(self):
         """
         Download audio and return as BytesIO buffer.
         """
 
-        ydl_opts = {
+        audio_dl_opts = {
             'format': 'm4a/bestaudio/best',
             "outtmpl": "-",
             'logtostderr': True,
@@ -27,8 +27,15 @@ class yt_audio:
         }
 
         buffer = io.BytesIO()
-        with redirect_stdout(buffer), YoutubeDL(ydl_opts) as ydl:
-            ydl.download(self.URLS)
+        with redirect_stdout(buffer), YoutubeDL(audio_dl_opts) as ydl:
+            ydl.download([self.URL])
+
+        info_opts = {
+            'quiet': True,
+        }
+
+        with YoutubeDL(info_opts) as ydl:
+            info = ydl.extract_info(self.URL, download=False)
 
         return buffer
 
