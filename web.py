@@ -9,7 +9,7 @@ def download_audio(url):
 
     try:
         yt = yt_audio(url)
-        filename, audio_buffer = yt.download_audio()
+        filename, audio_buffer = yt.download()
 
         return send_file(
             audio_buffer,

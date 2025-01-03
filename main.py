@@ -8,7 +8,7 @@ def main():
     args = parser.parse_args()
     yt = yt_audio(args.url)
 
-    filename, buffer = yt.download_audio()
+    filename, buffer = yt.download()
     with open(filename, 'wb') as f:
         f.write(buffer.getvalue())
 
