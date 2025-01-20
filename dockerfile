@@ -16,4 +16,4 @@ RUN mkdir /cache
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_ENV=production
 
-CMD ["python", "app.py"]
+CMD ["python", "web.py"]
