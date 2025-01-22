@@ -1,0 +1,104 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube Audio Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #cc0000;
+        }
+        #error {
+            color: red;
+            margin-top: 10px;
+        }
+        #results {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .result-info {
+            flex-grow: 1;
+        }
+        .download-btn {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Audio Downloader</h1>
+        <form id="searchForm">
+            <input type="text" id="url" placeholder="Enter YouTube URL or search query" required>
+            <button type="submit">Search</button>
+        </form>
+        <div id="error"></div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function isYouTubeUrl(url) {
+            return url.includes('youtube.com/') || url.includes('youtu.be/');
+        }
+
+        document.getElementById('searchForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const urlInput = document.getElementById('url');
+            const resultsDiv = document.getElementById('results');
+            const errorDiv = document.getElementById('error');
+            const query = urlInput.value;
+
+            if (isYouTubeUrl(query)) {
+                window.location.href = '/' + encodeURIComponent(query);
+                urlInput.value = '';
+            } else {
+                try {
+                    const response = await fetch('/search/' + encodeURIComponent(query));
+                    const results = await response.json();
+                    
+                    resultsDiv.innerHTML = results.map(video => `
+                        <div class="result-item">
+                            <div class="result-info">
+                                <strong>${video.title}</strong><br>
+                                Channel: ${video.channel}<br>
+                                Duration: ${Math.floor(video.duration / 60)}:${String(video.duration % 60).padStart(2, '0')}
+                            </div>
+                            <button class="download-btn" onclick="window.location.href='/${encodeURIComponent(video.url)}'">Download</button>
+                        </div>
+                    `).join('');
+                    
+                    errorDiv.textContent = '';
+                } catch (error) {
+                    errorDiv.textContent = 'Search failed: ' + error.message;
+                }
+            }
+        };
+    </script>
+</body>
+</html>

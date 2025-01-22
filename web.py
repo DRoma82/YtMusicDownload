@@ -1,7 +1,12 @@
-from flask import Flask, send_file
+from flask import Flask, render_template, send_file
 from yt_audio import yt_audio
 
 app = Flask(__name__)
+
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 
 @app.route('/<path:url>')
