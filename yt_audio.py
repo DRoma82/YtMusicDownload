@@ -4,6 +4,7 @@ import os
 import json
 from contextlib import redirect_stdout
 from yt_dlp import YoutubeDL
+from gpt import GptClient
 from urllib.parse import parse_qs, urlparse
 
 
@@ -66,7 +67,7 @@ class yt_audio:
         buffer.seek(0)
         return buffer
 
-    def _get_video_title(self):
+    def _get_video_info(self):
         cache_file = os.path.join(self.cache_dir, f"{self.video_id}.json")
 
         if os.path.exists(cache_file):
@@ -84,8 +85,35 @@ class yt_audio:
             with open(cache_file, 'w') as f:
                 json.dump(info, f, indent=2)
 
-        filename = self._get_safe_filename(info['title'])
-        return filename
+        return info
+
+    def _get_video_title(self) -> str:
+
+        cache_file = os.path.join(self.cache_dir, f"{self.video_id}.title")
+
+        if os.path.exists(cache_file):
+            with open(cache_file, 'r') as f:
+                return f.read()
+
+        info = self._get_video_info()
+
+        prompt = f"""
+            This is the title of the video: {info['title']}
+            This is the channel name: {info['uploader']}
+            This is the video description: {info['description']}
+            Please get me the title of the song in the format 'Artist - Title'
+            If this is a live performance add ' (Live)' to the end of the title.
+            Return only that, as a string, and nothing else.
+        """
+
+        print(prompt)
+
+        ai_response = GptClient.query(prompt)
+
+        print(ai_response)
+
+        return ai_response
+
 
     def _get_safe_filename(self, title: str):
         """Get a filename-safe version of the video title."""
