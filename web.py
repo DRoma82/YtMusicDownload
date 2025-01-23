@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_file
+from flask import Flask, render_template, send_file, jsonify
 from yt_audio import yt_audio
 
 app = Flask(__name__)
@@ -7,6 +7,12 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+@app.route('/search/<query>')
+def search(query):
+    videos = yt_audio.search(query)
+    return jsonify(videos)
 
 
 @app.route('/<path:url>')

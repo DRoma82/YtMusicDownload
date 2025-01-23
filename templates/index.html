@@ -24,6 +24,7 @@
             color: white;
             border: none;
             cursor: pointer;
+            margin: 0 5px;
         }
         button:hover {
             background-color: #cc0000;
@@ -46,8 +47,9 @@
         .result-info {
             flex-grow: 1;
         }
-        .download-btn {
-            margin-left: 10px;
+        .buttons-container {
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
@@ -65,6 +67,19 @@
     <script>
         function isYouTubeUrl(url) {
             return url.includes('youtube.com/') || url.includes('youtu.be/');
+        }
+
+        function shareUrl(url) {
+            if (navigator.share) {
+                navigator.share({
+                    url: url
+                }).catch(console.error);
+            }
+        }
+
+		function moises(url) {
+            const shortcutUrl = `shortcuts://x-callback-url/run-shortcut?name=YtDownload&input=${url}`;
+            window.location.href = shortcutUrl;
         }
 
         document.getElementById('searchForm').onsubmit = async function(e) {
@@ -89,7 +104,11 @@
                                 Channel: ${video.channel}<br>
                                 Duration: ${Math.floor(video.duration / 60)}:${String(video.duration % 60).padStart(2, '0')}
                             </div>
-                            <button class="download-btn" onclick="window.location.href='/${encodeURIComponent(video.url)}'">Download</button>
+                            <div class="buttons-container">
+                                <button onclick="moises('${video.url}')">Moises</button>
+                                <button onclick="shareUrl('${video.url}')">Share</button>
+                                <button onclick="window.location.href='/${encodeURIComponent(video.url)}'">Download</button>
+                            </div>
                         </div>
                     `).join('');
                     

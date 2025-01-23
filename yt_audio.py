@@ -28,7 +28,7 @@ class yt_audio:
             'no_warnings': True,
             'format': 'm4a/bestaudio/best'
         }
-        
+
         with YoutubeDL(ydl_opts) as ydl:
             search_results = ydl.extract_info(f"ytsearch10:{query}", download=False)
             videos = []
