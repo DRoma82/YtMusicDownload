@@ -11,6 +11,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./*.py .
 
+RUN mkdir /templates
+
+COPY ./templates/* /templates/
+
 RUN mkdir /cache
 
 ENV PYTHONUNBUFFERED=1
