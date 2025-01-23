@@ -20,6 +20,27 @@ class yt_audio:
         if not os.path.exists(self.cache_dir):
             os.makedirs(self.cache_dir)
 
+    @staticmethod
+    def search(query: str) -> list:
+        ydl_opts = {
+            'quiet': True,
+            'extract_flat': True,
+            'no_warnings': True,
+            'format': 'm4a/bestaudio/best'
+        }
+        
+        with YoutubeDL(ydl_opts) as ydl:
+            search_results = ydl.extract_info(f"ytsearch10:{query}", download=False)
+            videos = []
+            for entry in search_results['entries']:
+                videos.append({
+                    'title': entry['title'],
+                    'url': entry['url'],
+                    'duration': entry.get('duration', 'N/A'),
+                    'channel': entry.get('channel', 'N/A')
+                })
+            return videos
+
     def _extract_video_id(self, url: str) -> str:
         """Extract YouTube video ID from URL."""
         parsed = urlparse(url)
@@ -106,13 +127,9 @@ class yt_audio:
             Return only that, as a string, and nothing else.
         """
 
-        print(prompt)
-
         ai_response = GptClient.query(prompt)
 
-        print(ai_response)
-
-        return ai_response
+        return self._get_safe_filename(ai_response)
 
 
     def _get_safe_filename(self, title: str):
