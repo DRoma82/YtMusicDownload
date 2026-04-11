@@ -7,11 +7,11 @@ RUN apt-get update && \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip --root-user-action
+RUN pip install --upgrade pip
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt --root-user-action
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./*.py ./
 
